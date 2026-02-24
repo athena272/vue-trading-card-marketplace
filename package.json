@@ -9,11 +9,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "axios": "^1.7.7",
+    "lucide-vue-next": "^0.575.0",
+    "pinia": "^2.2.6",
+    "vee-validate": "^4.14.2",
     "vue": "^3.5.13",
     "vue-router": "^4.4.5",
-    "pinia": "^2.2.6",
-    "axios": "^1.7.7",
-    "vee-validate": "^4.14.2",
     "yup": "^1.4.0"
   },
   "devDependencies": {

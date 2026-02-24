@@ -1,10 +1,17 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/authStore'
 import { useTradesStore } from '@/stores/tradesStore'
+import CardChip from '@/components/domain/CardChip.vue'
+import AppButton from '@/components/ui/AppButton.vue'
 import type { Trade } from '@/types'
+import type { Card } from '@/types'
 
 defineProps<{
   trades: Trade[]
+}>()
+
+const emit = defineEmits<{
+  'view-details': [card: Card]
 }>()
 
 const authStore = useAuthStore()
@@ -30,40 +37,36 @@ async function handleDelete(id: string) {
       <div class="trade-header">
         <span class="trade-user">{{ trade.user.name }}</span>
         <span class="trade-date">{{ new Date(trade.createdAt).toLocaleDateString('pt-BR') }}</span>
-        <button
+        <AppButton
           v-if="canDelete(trade)"
           type="button"
-          class="btn-delete"
+          variant="danger"
           @click="handleDelete(trade.id)"
         >
           Excluir
-        </button>
+        </AppButton>
       </div>
       <div class="trade-cards">
         <div class="trade-group">
           <span class="label">Oferece:</span>
-          <div class="mini-cards">
-            <div
+          <div class="chip-list">
+            <CardChip
               v-for="tc in trade.tradeCards.filter((c) => c.type === 'OFFERING')"
               :key="tc.id"
-              class="mini-card"
-            >
-              <img v-if="tc.card.imageUrl" :src="tc.card.imageUrl" :alt="tc.card.name" />
-              <span>{{ tc.card.name }}</span>
-            </div>
+              :card="tc.card"
+              @view-details="emit('view-details', tc.card)"
+            />
           </div>
         </div>
         <div class="trade-group">
           <span class="label">Quer receber:</span>
-          <div class="mini-cards">
-            <div
+          <div class="chip-list">
+            <CardChip
               v-for="tc in trade.tradeCards.filter((c) => c.type === 'RECEIVING')"
               :key="tc.id"
-              class="mini-card"
-            >
-              <img v-if="tc.card.imageUrl" :src="tc.card.imageUrl" :alt="tc.card.name" />
-              <span>{{ tc.card.name }}</span>
-            </div>
+              :card="tc.card"
+              @view-details="emit('view-details', tc.card)"
+            />
           </div>
         </div>
       </div>
@@ -73,71 +76,57 @@ async function handleDelete(id: string) {
 
 <style scoped>
 .empty {
-  color: #888;
-  padding: 2rem;
+  padding: var(--space-6);
   text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--text-base);
 }
 .trade-list {
   list-style: none;
 }
 .trade-item {
-  border: 1px solid #444;
-  border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  background: #2a2a2a;
+  padding: var(--space-5);
+  margin-bottom: var(--space-5);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-elevated);
+  box-shadow: var(--shadow-md);
 }
 .trade-header {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 0.75rem;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
 }
 .trade-user {
-  font-weight: 600;
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-semibold);
 }
 .trade-date {
-  color: #888;
-  font-size: 0.9rem;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
 }
-.btn-delete {
+.trade-header :deep(.btn) {
   margin-left: auto;
-  padding: 0.35rem 0.75rem;
-  background: #622;
-  border: 1px solid #833;
-  border-radius: 4px;
-  color: #fcc;
-}
-.btn-delete:hover {
-  background: #733;
 }
 .trade-cards {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-5);
+}
+.trade-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
 }
 .label {
-  font-size: 0.85rem;
-  color: #aaa;
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-muted);
 }
-.mini-cards {
+.chip-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-}
-.mini-card {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.25rem 0.5rem;
-  background: #333;
-  border-radius: 4px;
-  font-size: 0.85rem;
-}
-.mini-card img {
-  width: 32px;
-  height: 32px;
-  object-fit: cover;
-  border-radius: 4px;
+  gap: var(--space-4);
 }
 </style>

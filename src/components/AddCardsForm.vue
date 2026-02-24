@@ -2,8 +2,9 @@
 import { ref, computed, onMounted } from 'vue'
 import { useUserCardsStore } from '@/stores/userCardsStore'
 import { useCardsCatalogStore } from '@/stores/cardsCatalogStore'
-import CardGrid from './CardGrid.vue'
-import AppLoader from './AppLoader.vue'
+import CardGrid from '@/components/domain/CardGrid.vue'
+import AppLoader from '@/components/ui/AppLoader.vue'
+import AppButton from '@/components/ui/AppButton.vue'
 import type { Card } from '@/types'
 
 const userCardsStore = useUserCardsStore()
@@ -11,6 +12,10 @@ const catalogStore = useCardsCatalogStore()
 const selectedIds = ref<Set<string>>(new Set())
 const submitting = ref(false)
 const message = ref<{ type: 'ok' | 'err'; text: string } | null>(null)
+
+const emit = defineEmits<{
+  (e: 'view-details', card: Card): void
+}>()
 
 const myCardIds = computed(() => new Set(userCardsStore.cards.map((c) => c.id)))
 const catalogExcludingMine = computed(() => {
@@ -24,6 +29,10 @@ onMounted(async () => {
     catalogStore.fetchCards().catch(() => {}),
   ])
 })
+
+function onViewDetails(card: Card) {
+  emit('view-details', card)
+}
 
 function toggle(card: Card) {
   if (myCardIds.value.has(card.id)) return
@@ -66,17 +75,19 @@ async function submit() {
           :selectable="true"
           :selected-ids="Array.from(selectedIds)"
           @select="toggle"
+          @view-details="onViewDetails"
         />
       </div>
       <div class="actions">
-        <button
+        <AppButton
           type="button"
-          class="btn-submit"
+          variant="primary"
+          :loading="submitting"
           :disabled="submitting || selectedIds.size === 0"
           @click="submit"
         >
           {{ submitting ? 'Adicionando...' : `Adicionar (${selectedIds.size})` }}
-        </button>
+        </AppButton>
       </div>
       <p v-if="catalogStore.more" class="more">
         Há mais cartas no catálogo. Carregue a próxima página (a implementar).
@@ -87,38 +98,27 @@ async function submit() {
 
 <style scoped>
 .add-cards-form {
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-4);
 }
 .msg-ok {
-  color: #8f8;
+  color: var(--color-success);
 }
 .msg-err {
-  color: #f88;
+  color: var(--color-danger);
 }
 .hint {
-  font-size: 0.9rem;
-  color: #aaa;
-  margin-bottom: 0.75rem;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-3);
 }
 .grid-wrap {
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-4);
 }
 .actions {
-  margin-bottom: 0.5rem;
-}
-.btn-submit {
-  padding: 0.5rem 1rem;
-  background: #0a7;
-  border: none;
-  border-radius: 4px;
-  color: #fff;
-}
-.btn-submit:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+  margin-bottom: var(--space-2);
 }
 .more {
-  font-size: 0.85rem;
-  color: #888;
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
 }
 </style>

@@ -41,38 +41,43 @@ const { user, isAuthenticated } = storeToRefs(authStore)
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 1.5rem;
-  background: #1a1a1a;
-  border-bottom: 1px solid #333;
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-bg-elevated);
+  border-bottom: 1px solid var(--color-border);
 }
 .logo {
-  font-weight: 700;
-  font-size: 1.25rem;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--text-xl);
 }
 .nav {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: var(--space-5);
 }
 .nav a.router-link-active {
   text-decoration: underline;
 }
 .user {
-  color: #888;
-  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
 }
 .btn-logout {
-  padding: 0.35rem 0.75rem;
-  background: #444;
-  border: 1px solid #555;
-  border-radius: 4px;
-  color: inherit;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-bg-subtle);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
 }
 .btn-logout:hover {
-  background: #555;
+  background: var(--color-border);
+  border-color: var(--color-border-strong);
 }
 .main {
   flex: 1;
-  padding: 1.5rem;
+  padding: var(--space-5);
 }
 </style>

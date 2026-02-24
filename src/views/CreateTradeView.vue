@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import CreateTradeForm from '@/components/CreateTradeForm.vue'
+import CreateTradeForm from '@/components/domain/CreateTradeForm.vue'
 
 const router = useRouter()
 
@@ -10,18 +10,22 @@ function onSuccess() {
 </script>
 
 <template>
-  <div class="create-trade">
-    <h1>Criar solicitação de troca</h1>
+  <div class="page">
+    <h1 class="page-title">Criar solicitação de troca</h1>
     <CreateTradeForm @success="onSuccess" />
   </div>
 </template>
 
 <style scoped>
-.create-trade {
-  max-width: 700px;
+.page {
+  max-width: 960px;
   margin: 0 auto;
+  padding: var(--space-page-y) var(--space-page-x);
 }
-h1 {
-  margin-bottom: 1.5rem;
+.page-title {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-5);
+  line-height: var(--line-height-tight);
 }
 </style>

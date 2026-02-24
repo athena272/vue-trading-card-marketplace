@@ -27,17 +27,6 @@ pnpm build
 pnpm preview
 ```
 
-## Deploy
-
-O projeto gera um build estático em `dist/`. É possível fazer deploy em:
-
-- **Vercel**: conectar o repositório e usar o comando de build `pnpm build` e pasta de output `dist`.
-- **Netlify**: idem; em “Build command” use `pnpm build` e “Publish directory” use `dist`.
-
-Configure a variável de ambiente `VITE_API_BASE_URL` no painel do provedor se a API for outra (por padrão: `https://cards-marketplace-api.onrender.com`).
-
-**Nota:** A API hiberna após ~30s de inatividade e pode demorar alguns minutos para voltar; o front exibe mensagem amigável nesses casos.
-
 ## Estrutura do projeto
 
 - `src/api/` – Cliente HTTP (axios), interceptors e funções por recurso (auth, me, cards, trades).

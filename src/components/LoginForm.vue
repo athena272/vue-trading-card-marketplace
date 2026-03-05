@@ -48,6 +48,7 @@ const onSubmit = handleSubmit(async (values) => {
         v-bind="emailAttrs"
         type="email"
         autocomplete="email"
+        placeholder="Digite seu e-mail"
       />
       <span v-if="errors.email" class="field-error">{{ errors.email }}</span>
     </div>
@@ -59,6 +60,7 @@ const onSubmit = handleSubmit(async (values) => {
           id="login-password"
           v-model="password"
           v-bind="passwordAttrs"
+          placeholder="Digite sua senha"
           :type="showPassword ? 'text' : 'password'"
           autocomplete="current-password"
           :aria-invalid="Boolean(errors.password)"

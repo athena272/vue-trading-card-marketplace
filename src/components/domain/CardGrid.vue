@@ -9,12 +9,13 @@ const props = withDefaults(
     emptyMessage?: string
     selectable?: boolean
     selectedIds?: string[]
-    size?: 'default' | 'compact'
+    size?: 'default' | 'compact' | 'threeColumns'
   }>(),
   { size: 'default' }
 )
 
-provide('cardGridSize', () => props.size)
+// threeColumns usa o mesmo estilo visual de cartas que compact (tamanho reduzido)
+provide('cardGridSize', () => (props.size === 'threeColumns' ? 'compact' : props.size))
 
 const emit = defineEmits<{
   select: [card: Card]
@@ -54,5 +55,19 @@ const emit = defineEmits<{
 .grid.compact {
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: var(--space-3);
+}
+.grid.threeColumns {
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+}
+@media (max-width: 600px) {
+  .grid.threeColumns {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 380px) {
+  .grid.threeColumns {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

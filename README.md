@@ -2,6 +2,10 @@
 
 SPA em Vue 3 + TypeScript para um marketplace de troca de cartas, desenvolvido como desafio técnico. Permite registro, login, gestão de cartas e criação/deleção de solicitações de troca.
 
+## Demo
+
+Aplicação disponível em produção na Vercel: **[https://vue-trading-card-marketplace.vercel.app/](https://vue-trading-card-marketplace.vercel.app/)**
+
 ## Requisitos
 
 - Node.js 18+

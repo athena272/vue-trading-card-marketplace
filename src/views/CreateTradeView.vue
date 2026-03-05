@@ -18,7 +18,7 @@ function onSuccess() {
 
 <style scoped>
 .page {
-  max-width: 960px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: var(--space-page-y) var(--space-page-x);
 }

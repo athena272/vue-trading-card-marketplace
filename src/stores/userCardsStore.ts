@@ -23,11 +23,18 @@ export const useUserCardsStore = defineStore('userCards', () => {
     }
   }
 
-  async function addCards(cardIds: string[]): Promise<void> {
+  async function addCards(cardIds: string[], newCards?: Card[]): Promise<void> {
     if (cardIds.length === 0) return
     error.value = null
     await addCardsToMe(cardIds)
-    await fetchCards()
+    if (newCards?.length) {
+      if (cards.value.length === 0) {
+        await fetchCards()
+      }
+      const existingIds = new Set(cards.value.map((c) => c.id))
+      const toAppend = newCards.filter((c) => !existingIds.has(c.id))
+      cards.value = [...cards.value, ...toAppend]
+    }
   }
 
   function clearError(): void {

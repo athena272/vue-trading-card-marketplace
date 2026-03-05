@@ -51,7 +51,8 @@ async function submit() {
   submitting.value = true
   message.value = null
   try {
-    await userCardsStore.addCards(ids)
+    const cardsToAdd = catalogStore.list.filter((c) => ids.includes(c.id))
+    await userCardsStore.addCards(ids, cardsToAdd)
     catalogStore.invalidateCache()
     selectedIds.value = new Set()
     message.value = { type: 'ok', text: 'Cartas adicionadas.' }
@@ -66,12 +67,16 @@ async function submit() {
 <template>
   <div class="add-cards-form">
     <p v-if="message" :class="message.type === 'ok' ? 'msg-ok' : 'msg-err'">{{ message.text }}</p>
-    <AppLoader v-else-if="catalogStore.loading" message="Carregando catálogo de cartas..." />
-    <template v-else>
+    <AppLoader
+      v-if="catalogStore.loading || userCardsStore.loading"
+      message="Carregando..."
+    />
+    <template v-if="!catalogStore.loading && !userCardsStore.loading">
       <p class="hint">Selecione as cartas que deseja adicionar à sua conta (as que você já tem não podem ser selecionadas).</p>
       <div class="grid-wrap">
         <CardGrid
           :cards="catalogExcludingMine"
+          size="compact"
           :selectable="true"
           :selected-ids="Array.from(selectedIds)"
           @select="toggle"

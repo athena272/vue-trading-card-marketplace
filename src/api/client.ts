@@ -38,12 +38,24 @@ apiClient.interceptors.request.use((config) => {
 const API_WAKING_MESSAGE =
   'O serviço pode estar acordando. Aguarde alguns segundos e tente novamente.'
 
+const SERVER_ERROR_FALLBACK = 'Erro no servidor. Tente novamente mais tarde.'
+
+/** Mensagens do backend conhecidas → tradução para exibição em PT. */
+const KNOWN_API_MESSAGES: Record<string, string> = {
+  'User already exists': 'Já existe um usuário com este e-mail.',
+  'Incorrect password/email': 'E-mail ou senha incorretos.',
+}
+
+function toFriendlyMessage(msg: string): string {
+  return KNOWN_API_MESSAGES[msg] ?? msg
+}
+
 apiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError<{ message?: string; error?: string }>) => {
     const status = error.response?.status ?? 0
     const isTimeout = error.code === 'ECONNABORTED' || error.message?.includes('timeout')
-    const message =
+    const rawMessage =
       error.response?.data?.message ??
       error.response?.data?.error ??
       error.message ??
@@ -53,8 +65,15 @@ apiClient.interceptors.response.use(
       : status === 503
         ? API_WAKING_MESSAGE
         : status >= 500
-          ? 'Erro no servidor. Tente novamente mais tarde.'
-          : message
+          ? (() => {
+              const serverMsg = error.response?.data?.message
+              const hasServerMessage =
+                typeof serverMsg === 'string' && serverMsg.trim().length > 0
+              return toFriendlyMessage(
+                hasServerMessage ? serverMsg.trim() : SERVER_ERROR_FALLBACK
+              )
+            })()
+          : toFriendlyMessage(rawMessage)
     throw new ApiError(friendlyMessage, status, error.response?.data)
   }
 )
